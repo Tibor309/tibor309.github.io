@@ -575,14 +575,15 @@
                 letter-spacing: 0.125rem;
                 padding-left: calc(0.125rem + 1.5rem);
                 font-size: 1em;
-                font-weight: 400;
-                border-radius: 0rem;
+                font-weight: 500;
+                border-radius: 0.25rem;
+                box-shadow: 0rem 0.25rem 0.5rem 0rem rgba(0,0,0,0.329);
                 transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
             }
 
             #buttons02 li a svg {
                 display: block;
-                fill: #A5ADCB;
+                fill: #B8C0E0;
                 flex-grow: 0;
                 flex-shrink: 0;
                 height: 100%;
@@ -600,15 +601,20 @@
 
             #buttons02 .button {
                 background-color: #313244;
-                color: #A5ADCB;
+                color: #B8C0E0;
             }
 
             #buttons02 .button svg {
                 fill: #B4BEFE;
             }
 
+            #buttons02 .button:hover svg {
+                fill: #313244;
+            }
+
             #buttons02 .button:hover {
-                background-color: #3E4363 !important;
+                background-color: #B4BEFE !important;
+                color: #313244;
             }
 
             @media (max-width: 1920px) {
