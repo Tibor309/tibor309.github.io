@@ -634,6 +634,26 @@ dialog.clipboard.active::backdrop {
     transform: translateY(-6%);
 }
 
+#icons03 .n01 svg {
+    fill: #B7BDF8;
+}
+
+#icons03 .n02 svg {
+    fill: #8AADF4;
+}
+
+#icons03 .n03 svg {
+    fill: #7DC4E4;
+}
+
+#icons03 .n04 svg {
+    fill: #C6A0F6;
+}
+
+#icons03 .n05 svg {
+    fill: #181926;
+}
+
 .image {
     display: block;
     line-height: 0;
