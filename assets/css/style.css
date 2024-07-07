@@ -357,11 +357,11 @@ body.is-instant:after {
 }
 
 dialog.clipboard {
-    --color-background: #FFFFFF;
-    --color-content-background: #F5F5F5;
-    --color-content-border: #D3D3D3;
-    --color-content-text: #000000;
-    --color-text: #808080;
+    --color-background: #dce0e8;
+    --color-content-background: #eff1f5;
+    --color-content-border: #313244;
+    --color-content-text: #ccd0da;
+    --color-text: #6c6f85;
     --border-radius: 9px;
     align-items: center;
     background: transparent;
@@ -379,12 +379,11 @@ dialog.clipboard {
 
 @media (prefers-color-scheme: dark) {
     dialog.clipboard {
-        --color-background: #000000;
-        --color-content-background: #222222;
-        --color-content-border: #444444;
-        --color-content-text: #FFFFFF;
-        --color-text: #666666;
-    }
+        --color-background: #11111b;
+        --color-content-background: #1e1e2e;
+        --color-content-border: #313244;
+        --color-content-text: #cdd6f4;
+        --color-text: #a6adc8;
 }
 
 dialog.clipboard:not([open]) {
