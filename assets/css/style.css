@@ -652,6 +652,10 @@ dialog.clipboard.active::backdrop {
     fill: #A6E3A1;
 }
 
+#icons03 .n06 svg {
+    fill: #F38BA8;
+}
+
 .image {
     display: block;
     line-height: 0;
