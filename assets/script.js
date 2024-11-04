@@ -69,6 +69,18 @@
         o.flags.lsdUnits = o.canUse('width', '100dvw');
         return o;
     }())
+      , ready = {
+        list: [],
+        add: function(f) {
+            this.list.push(f);
+        },
+        run: function() {
+            this.list.forEach( (f) => {
+                f();
+            }
+            );
+        },
+    }
       , trigger = function(t) {
         dispatchEvent(new Event(t));
     }
@@ -85,6 +97,21 @@
         for (i = 0; i < ss.length; i++)
             f(ss[i]);
         return a;
+    }
+      , escapeHtml = function(s) {
+        if (s === '' || s === null || s === undefined)
+            return '';
+        var a = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+        };
+        s = s.replace(/[&<>"']/g, function(x) {
+            return a[x];
+        });
+        return s;
     }
       , thisHash = function() {
         var h = location.hash ? location.hash.substring(1) : null, a;
@@ -191,16 +218,23 @@
         default:
             break;
         }
-        a = parent.querySelectorAll('deferred-script');
+        a = parent.querySelectorAll('unloaded-script');
         for (i = 0; i < a.length; i++) {
             x = document.createElement('script');
-            x.setAttribute('data-deferred', '');
+            x.setAttribute('data-loaded', '');
             if (a[i].getAttribute('src'))
                 x.setAttribute('src', a[i].getAttribute('src'));
             if (a[i].textContent)
                 x.textContent = a[i].textContent;
             a[i].replaceWith(x);
         }
+        x = new Event('loadelements');
+        a = parent.querySelectorAll('[data-unloaded]');
+        a.forEach( (element) => {
+            element.removeAttribute('data-unloaded');
+            element.dispatchEvent(x);
+        }
+        );
     }
       , unloadElements = function(parent) {
         var a, e, x, i;
@@ -260,7 +294,7 @@
                 $body.classList.remove('with-loader');
                 $body.classList.remove('is-playing');
                 $body.classList.add('is-ready');
-            }, 1000);
+            }, 750);
         }, 100);
     };
     on('load', loadHandler);
@@ -438,6 +472,7 @@
     var onvisible = {
         effects: {
             'blur-in': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'filter ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -451,6 +486,7 @@
                 },
             },
             'zoom-in': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -464,6 +500,7 @@
                 },
             },
             'zoom-out': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -477,6 +514,7 @@
                 },
             },
             'slide-left': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -488,6 +526,7 @@
                 },
             },
             'slide-right': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -499,6 +538,7 @@
                 },
             },
             'flip-forward': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -513,6 +553,7 @@
                 },
             },
             'flip-backward': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -527,6 +568,7 @@
                 },
             },
             'flip-left': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -541,6 +583,7 @@
                 },
             },
             'flip-right': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -555,6 +598,7 @@
                 },
             },
             'tilt-left': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -568,6 +612,7 @@
                 },
             },
             'tilt-right': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -581,6 +626,7 @@
                 },
             },
             'fade-right': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -594,6 +640,7 @@
                 },
             },
             'fade-left': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -607,6 +654,7 @@
                 },
             },
             'fade-down': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -620,6 +668,7 @@
                 },
             },
             'fade-up': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -633,6 +682,7 @@
                 },
             },
             'fade-in': {
+                type: 'transition',
                 transition: function(speed, delay) {
                     return 'opacity ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
                 },
@@ -644,20 +694,20 @@
                 },
             },
             'fade-in-background': {
-                custom: true,
-                transition: function(speed, delay) {
+                type: 'manual',
+                rewind: function() {
+                    this.style.removeProperty('--onvisible-delay');
+                    this.style.removeProperty('--onvisible-background-color');
+                },
+                play: function(speed, delay) {
                     this.style.setProperty('--onvisible-speed', speed + 's');
                     if (delay)
                         this.style.setProperty('--onvisible-delay', delay + 's');
-                },
-                rewind: function() {
-                    this.style.removeProperty('--onvisible-background-color');
-                },
-                play: function() {
                     this.style.setProperty('--onvisible-background-color', 'rgba(0,0,0,0.001)');
                 },
             },
             'zoom-in-image': {
+                type: 'transition',
                 target: 'img',
                 transition: function(speed, delay) {
                     return 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
@@ -670,6 +720,7 @@
                 },
             },
             'zoom-out-image': {
+                type: 'transition',
                 target: 'img',
                 transition: function(speed, delay) {
                     return 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
@@ -682,6 +733,7 @@
                 },
             },
             'focus-image': {
+                type: 'transition',
                 target: 'img',
                 transition: function(speed, delay) {
                     return 'transform ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '') + ', ' + 'filter ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
@@ -696,100 +748,338 @@
                 },
             },
             'wipe-up': {
-                transition: function(speed, delay) {
-                    return 'mask-size ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
+                type: 'animate',
+                keyframes: function(intensity) {
+                    return [{
+                        maskSize: '100% 0%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, {
+                        maskSize: '110% 110%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, ];
                 },
-                rewind: function(intensity) {
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                        easing: 'ease',
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
                     this.style.maskComposite = 'exclude';
                     this.style.maskRepeat = 'no-repeat';
-                    this.style.maskImage = 'linear-gradient(0deg, black 100%, transparent 100%)';
                     this.style.maskPosition = '0% 100%';
-                    this.style.maskSize = '100% 0%';
                 },
                 play: function() {
-                    this.style.maskSize = '110% 110%';
+                    this.style.opacity = 1;
                 },
             },
             'wipe-down': {
-                transition: function(speed, delay) {
-                    return 'mask-size ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
+                type: 'animate',
+                keyframes: function(intensity) {
+                    return [{
+                        maskSize: '100% 0%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, {
+                        maskSize: '110% 110%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, ];
                 },
-                rewind: function(intensity) {
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                        easing: 'ease',
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
                     this.style.maskComposite = 'exclude';
                     this.style.maskRepeat = 'no-repeat';
-                    this.style.maskImage = 'linear-gradient(0deg, black 100%, transparent 100%)';
                     this.style.maskPosition = '0% 0%';
-                    this.style.maskSize = '100% 0%';
                 },
                 play: function() {
-                    this.style.maskSize = '110% 110%';
+                    this.style.opacity = 1;
                 },
             },
             'wipe-left': {
-                transition: function(speed, delay) {
-                    return 'mask-size ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
+                type: 'animate',
+                keyframes: function(intensity) {
+                    return [{
+                        maskSize: '0% 100%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, {
+                        maskSize: '110% 110%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, ];
                 },
-                rewind: function(intensity) {
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                        easing: 'ease',
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
                     this.style.maskComposite = 'exclude';
                     this.style.maskRepeat = 'no-repeat';
-                    this.style.maskImage = 'linear-gradient(90deg, black 100%, transparent 100%)';
                     this.style.maskPosition = '100% 0%';
-                    this.style.maskSize = '0% 100%';
                 },
                 play: function() {
-                    this.style.maskSize = '110% 110%';
+                    this.style.opacity = 1;
                 },
             },
             'wipe-right': {
-                transition: function(speed, delay) {
-                    return 'mask-size ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
+                type: 'animate',
+                keyframes: function(intensity) {
+                    return [{
+                        maskSize: '0% 100%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, {
+                        maskSize: '110% 110%',
+                        maskImage: 'linear-gradient(90deg, black 100%, transparent 100%)',
+                    }, ];
                 },
-                rewind: function(intensity) {
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                        easing: 'ease',
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
                     this.style.maskComposite = 'exclude';
                     this.style.maskRepeat = 'no-repeat';
-                    this.style.maskImage = 'linear-gradient(90deg, black 100%, transparent 100%)';
                     this.style.maskPosition = '0% 0%';
-                    this.style.maskSize = '0% 100%';
                 },
                 play: function() {
-                    this.style.maskSize = '110% 110%';
+                    this.style.opacity = 1;
                 },
             },
             'wipe-diagonal': {
-                transition: function(speed, delay) {
-                    return 'mask-size ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
+                type: 'animate',
+                keyframes: function(intensity) {
+                    return [{
+                        maskSize: '0% 0%',
+                        maskImage: 'linear-gradient(45deg, black 50%, transparent 50%)',
+                    }, {
+                        maskSize: '220% 220%',
+                        maskImage: 'linear-gradient(45deg, black 50%, transparent 50%)',
+                    }, ];
                 },
-                rewind: function(intensity) {
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                        easing: 'ease',
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
                     this.style.maskComposite = 'exclude';
                     this.style.maskRepeat = 'no-repeat';
-                    this.style.maskImage = 'linear-gradient(45deg, black 50%, transparent 50%)';
                     this.style.maskPosition = '0% 100%';
-                    this.style.maskSize = '0% 0%';
                 },
                 play: function() {
-                    this.style.maskSize = '220% 220%';
+                    this.style.opacity = 1;
                 },
             },
             'wipe-reverse-diagonal': {
-                transition: function(speed, delay) {
-                    return 'mask-size ' + speed + 's ease' + (delay ? ' ' + delay + 's' : '');
+                type: 'animate',
+                keyframes: function(intensity) {
+                    return [{
+                        maskSize: '0% 0%',
+                        maskImage: 'linear-gradient(135deg, transparent 50%, black 50%)',
+                    }, {
+                        maskSize: '220% 220%',
+                        maskImage: 'linear-gradient(135deg, transparent 50%, black 50%)',
+                    }, ];
                 },
-                rewind: function(intensity) {
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                        easing: 'ease',
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
                     this.style.maskComposite = 'exclude';
                     this.style.maskRepeat = 'no-repeat';
-                    this.style.maskImage = 'linear-gradient(135deg, transparent 50%, black 50%)';
                     this.style.maskPosition = '100% 100%';
-                    this.style.maskSize = '0% 0%';
                 },
                 play: function() {
-                    this.style.maskSize = '220% 220%';
+                    this.style.opacity = 1;
+                },
+            },
+            'pop-in': {
+                type: 'animate',
+                keyframes: function(intensity) {
+                    let diff = (intensity + 1) * 0.025;
+                    return [{
+                        opacity: 0,
+                        transform: 'scale(' + (1 - diff) + ')',
+                    }, {
+                        opacity: 1,
+                        transform: 'scale(' + (1 + diff) + ')',
+                    }, {
+                        opacity: 1,
+                        transform: 'scale(' + (1 - (diff * 0.25)) + ')',
+                        offset: 0.9,
+                    }, {
+                        opacity: 1,
+                        transform: 'scale(1)',
+                    }];
+                },
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
+                },
+                play: function() {
+                    this.style.opacity = 1;
+                },
+            },
+            'bounce-up': {
+                type: 'animate',
+                keyframes: function(intensity) {
+                    let diff = (intensity + 1) * 0.075;
+                    return [{
+                        opacity: 0,
+                        transform: 'translateY(' + diff + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateY(' + (-1 * diff) + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateY(' + (diff * 0.25) + 'rem)',
+                        offset: 0.9,
+                    }, {
+                        opacity: 1,
+                        transform: 'translateY(0)',
+                    }];
+                },
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
+                },
+                play: function() {
+                    this.style.opacity = 1;
+                },
+            },
+            'bounce-down': {
+                type: 'animate',
+                keyframes: function(intensity) {
+                    let diff = (intensity + 1) * 0.075;
+                    return [{
+                        opacity: 0,
+                        transform: 'translateY(' + (-1 * diff) + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateY(' + diff + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateY(' + (-1 * (diff * 0.25)) + 'rem)',
+                        offset: 0.9,
+                    }, {
+                        opacity: 1,
+                        transform: 'translateY(0)',
+                    }];
+                },
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
+                },
+                play: function() {
+                    this.style.opacity = 1;
+                },
+            },
+            'bounce-left': {
+                type: 'animate',
+                keyframes: function(intensity) {
+                    let diff = (intensity + 1) * 0.075;
+                    return [{
+                        opacity: 0,
+                        transform: 'translateX(' + diff + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateX(' + (-1 * diff) + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateX(' + (diff * 0.25) + 'rem)',
+                        offset: 0.9,
+                    }, {
+                        opacity: 1,
+                        transform: 'translateX(0)',
+                    }];
+                },
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
+                },
+                play: function() {
+                    this.style.opacity = 1;
+                },
+            },
+            'bounce-right': {
+                type: 'animate',
+                keyframes: function(intensity) {
+                    let diff = (intensity + 1) * 0.075;
+                    return [{
+                        opacity: 0,
+                        transform: 'translateX(' + (-1 * diff) + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateX(' + diff + 'rem)',
+                    }, {
+                        opacity: 1,
+                        transform: 'translateX(' + (-1 * (diff * 0.25)) + 'rem)',
+                        offset: 0.9,
+                    }, {
+                        opacity: 1,
+                        transform: 'translateX(0)',
+                    }];
+                },
+                options: function(speed) {
+                    return {
+                        duration: speed,
+                        iterations: 1,
+                    };
+                },
+                rewind: function() {
+                    this.style.opacity = 0;
+                },
+                play: function() {
+                    this.style.opacity = 1;
                 },
             },
         },
-        regex: new RegExp('([a-zA-Z0-9\.\,\-\_\"\'\?\!\:\;\#\@\#$\%\&\(\)\{\}]+)','g'),
+        regex: new RegExp('([^\\s]+)','g'),
         add: function(selector, settings) {
-            var _this = this, style = settings.style in this.effects ? settings.style : 'fade', speed = parseInt('speed'in settings ? settings.speed : 1000) / 1000, intensity = ((parseInt('intensity'in settings ? settings.intensity : 5) / 10) * 1.75) + 0.25, delay = parseInt('delay'in settings ? settings.delay : 0) / 1000, replay = 'replay'in settings ? settings.replay : false, stagger = 'stagger'in settings ? (parseInt(settings.stagger) >= 0 ? (parseInt(settings.stagger) / 1000) : false) : false, staggerOrder = 'staggerOrder'in settings ? settings.staggerOrder : 'default', staggerSelector = 'staggerSelector'in settings ? settings.staggerSelector : null, threshold = parseInt('threshold'in settings ? settings.threshold : 3), state = 'state'in settings ? settings.state : null, effect = this.effects[style], scrollEventThreshold;
-            if ('CARRD_DISABLE_ANIMATION'in window) {
+            var _this = this, style = settings.style in this.effects ? settings.style : 'fade', speed = parseInt('speed'in settings ? settings.speed : 0), intensity = parseInt('intensity'in settings ? settings.intensity : 5), delay = parseInt('delay'in settings ? settings.delay : 0), replay = 'replay'in settings ? settings.replay : false, stagger = 'stagger'in settings ? (parseInt(settings.stagger) >= 0 ? parseInt(settings.stagger) : false) : false, staggerOrder = 'staggerOrder'in settings ? settings.staggerOrder : 'default', staggerSelector = 'staggerSelector'in settings ? settings.staggerSelector : null, threshold = parseInt('threshold'in settings ? settings.threshold : 3), state = 'state'in settings ? settings.state : null, effect = this.effects[style], enter, leave, scrollEventThreshold;
+            if (window.CARRD_DISABLE_ANIMATION === true) {
                 if (style == 'fade-in-background')
                     $$(selector).forEach(function(e) {
                         e.style.setProperty('--onvisible-background-color', 'rgba(0,0,0,0.001)');
@@ -814,47 +1104,86 @@
                 scrollEventThreshold = 0.475;
                 break;
             }
+            switch (effect.type) {
+            default:
+            case 'transition':
+                intensity = ((intensity / 10) * 1.75) + 0.25;
+                enter = function(children, staggerDelay=0) {
+                    var _this = this, transitionOrig;
+                    if (effect.target)
+                        _this = this.querySelector(effect.target);
+                    transitionOrig = _this.style.transition;
+                    _this.style.setProperty('backface-visibility', 'hidden');
+                    _this.style.transition = effect.transition.apply(_this, [speed / 1000, (delay + staggerDelay) / 1000]);
+                    effect.play.apply(_this, [intensity, !!children]);
+                    setTimeout(function() {
+                        _this.style.removeProperty('backface-visibility');
+                        _this.style.transition = transitionOrig;
+                    }, (speed + delay + staggerDelay) * 2);
+                }
+                ;
+                leave = function(children) {
+                    var _this = this, transitionOrig;
+                    if (effect.target)
+                        _this = this.querySelector(effect.target);
+                    transitionOrig = _this.style.transition;
+                    _this.style.setProperty('backface-visibility', 'hidden');
+                    _this.style.transition = effect.transition.apply(_this, [speed / 1000]);
+                    effect.rewind.apply(_this, [intensity, !!children]);
+                    setTimeout(function() {
+                        _this.style.removeProperty('backface-visibility');
+                        _this.style.transition = transitionOrig;
+                    }, speed * 2);
+                }
+                ;
+                break;
+            case 'animate':
+                enter = function(children, staggerDelay=0) {
+                    var _this = this, transitionOrig;
+                    if (effect.target)
+                        _this = this.querySelector(effect.target);
+                    setTimeout( () => {
+                        effect.play.apply(_this, []);
+                        _this.animate(effect.keyframes.apply(_this, [intensity]), effect.options.apply(_this, [speed, delay]));
+                    }
+                    , delay + staggerDelay);
+                }
+                ;
+                leave = function(children) {
+                    var _this = this, transitionOrig;
+                    if (effect.target)
+                        _this = this.querySelector(effect.target);
+                    let a = _this.animate(effect.keyframes.apply(_this, [intensity]), effect.options.apply(_this, [speed, delay]));
+                    a.reverse();
+                    a.addEventListener('finish', () => {
+                        effect.rewind.apply(_this, []);
+                    }
+                    );
+                }
+                ;
+                break;
+            case 'manual':
+                enter = function(children, staggerDelay=0) {
+                    var _this = this, transitionOrig;
+                    if (effect.target)
+                        _this = this.querySelector(effect.target);
+                    effect.play.apply(_this, [speed / 1000, (delay + staggerDelay) / 1000, intensity]);
+                }
+                ;
+                leave = function(children) {
+                    var _this = this, transitionOrig;
+                    if (effect.target)
+                        _this = this.querySelector(effect.target);
+                    effect.rewind.apply(_this, [intensity, !!children]);
+                }
+                ;
+                break;
+            }
             $$(selector).forEach(function(e) {
-                var children, enter, leave, targetElement, triggerElement;
+                var children, targetElement, triggerElement;
                 if (stagger !== false && staggerSelector == ':scope > *')
                     _this.expandTextNodes(e);
                 children = (stagger !== false && staggerSelector) ? e.querySelectorAll(staggerSelector) : null;
-                enter = function(staggerDelay=0) {
-                    var _this = this, transitionOrig;
-                    if (effect.target)
-                        _this = this.querySelector(effect.target);
-                    if (!effect.custom) {
-                        transitionOrig = _this.style.transition;
-                        _this.style.setProperty('backface-visibility', 'hidden');
-                        _this.style.transition = effect.transition(speed, delay + staggerDelay);
-                    } else
-                        effect.transition.apply(_this, [speed, delay + staggerDelay]);
-                    effect.play.apply(_this, [intensity, !!children]);
-                    if (!effect.custom)
-                        setTimeout(function() {
-                            _this.style.removeProperty('backface-visibility');
-                            _this.style.transition = transitionOrig;
-                        }, (speed + delay + staggerDelay) * 1000 * 2);
-                }
-                ;
-                leave = function() {
-                    var _this = this, transitionOrig;
-                    if (effect.target)
-                        _this = this.querySelector(effect.target);
-                    if (!effect.custom) {
-                        transitionOrig = _this.style.transition;
-                        _this.style.setProperty('backface-visibility', 'hidden');
-                        _this.style.transition = effect.transition(speed);
-                    } else
-                        effect.transition.apply(_this, [speed]);
-                    effect.rewind.apply(_this, [intensity, !!children]);
-                    if (!effect.custom)
-                        setTimeout(function() {
-                            _this.style.removeProperty('backface-visibility');
-                            _this.style.transition = transitionOrig;
-                        }, speed * 1000 * 2);
-                }
-                ;
                 if (effect.target)
                     targetElement = e.querySelector(effect.target);
                 else
@@ -881,7 +1210,7 @@
                     threshold: scrollEventThreshold,
                     enter: children ? function() {
                         var staggerDelay = 0, childHandler = function(e) {
-                            enter.apply(e, [staggerDelay]);
+                            enter.apply(e, [children, staggerDelay]);
                             staggerDelay += stagger;
                         }, a;
                         if (staggerOrder == 'default') {
@@ -904,7 +1233,7 @@
                     : enter,
                     leave: (replay ? (children ? function() {
                         children.forEach(function(e) {
-                            leave.apply(e);
+                            leave.apply(e, [children]);
                         });
                     }
                     : leave) : null),
@@ -919,7 +1248,7 @@
                     continue;
                 s = x.nodeValue;
                 s = s.replace(this.regex, function(x, a) {
-                    return '<text-node>' + a + '</text-node>';
+                    return '<text-node>' + escapeHtml(a) + '</text-node>';
                 });
                 w = document.createElement('text-node');
                 w.innerHTML = s;
@@ -931,99 +1260,9 @@
             }
         },
     };
-    (function() {
-        var dialog = null;
-        class ClipboardDialog {
-            $dialog = null;
-            $close = null;
-            $content = null;
-            $wrapper = null;
-            isLocked = false;
-            constructor() {
-                this.$dialog = document.createElement('dialog');
-                this.$dialog.classList.add('clipboard');
-                this.$dialog.addEventListener('click', ()=>{
-                    event.preventDefault();
-                    event.stopPropagation();
-                    this.close();
-                }
-                );
-                this.$dialog.addEventListener('keydown', (event)=>{
-                    if (event.keyCode == 27) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        this.close();
-                    }
-                }
-                );
-                document.body.appendChild(this.$dialog);
-                this.$wrapper = document.createElement('div');
-                this.$wrapper.classList.add('wrapper');
-                this.$wrapper.addEventListener('click', (event)=>{
-                    event.preventDefault();
-                    event.stopPropagation();
-                    navigator.clipboard.writeText(this.$content.innerText);
-                    this.$wrapper.classList.add('copied');
-                    setTimeout(()=>{
-                        this.close();
-                    }
-                    , 500);
-                }
-                );
-                this.$dialog.appendChild(this.$wrapper);
-                this.$content = document.createElement('p');
-                this.$content.classList.add('content');
-                this.$content.innerText = '-';
-                this.$wrapper.appendChild(this.$content);
-                this.$close = document.createElement('div');
-                this.$close.classList.add('close');
-                this.$close.addEventListener('click', (event)=>{
-                    this.close();
-                }
-                );
-                this.$dialog.appendChild(this.$close);
-            }
-            ;close() {
-                if (this.isLocked)
-                    return;
-                this.isLocked = true;
-                this.$dialog.classList.remove('active');
-                setTimeout(()=>{
-                    this.$dialog.close();
-                    this.$wrapper.classList.remove('copied');
-                    this.isLocked = false;
-                }
-                , 750);
-            }
-            ;open(content) {
-                if (this.isLocked)
-                    return;
-                this.isLocked = true;
-                this.$content.innerText = unescape(content);
-                this.$dialog.showModal();
-                setTimeout(()=>{
-                    this.$dialog.classList.add('active');
-                    setTimeout(()=>{
-                        this.isLocked = false;
-                    }
-                    , 250);
-                }
-                , 0);
-            }
-        }
-        ;window._clipboard = function(event, content) {
-            event.preventDefault();
-            if (!dialog)
-                dialog = new ClipboardDialog;
-            dialog.open(content);
-            return false;
-        }
-        ;
-    }
-    )();
     onvisible.add('#icons03', {
         style: 'fade-down',
-        speed: 875,
+        speed: 625,
         intensity: 1,
         threshold: 3,
         delay: 0,
@@ -1033,7 +1272,7 @@
     });
     onvisible.add('#text04', {
         style: 'fade-right',
-        speed: 1000,
+        speed: 750,
         intensity: 1,
         threshold: 3,
         delay: 0,
@@ -1041,7 +1280,7 @@
     });
     onvisible.add('#text07', {
         style: 'fade-in',
-        speed: 375,
+        speed: 125,
         intensity: 5,
         threshold: 3,
         delay: 0,
@@ -1049,7 +1288,7 @@
     });
     onvisible.add('#buttons01', {
         style: 'fade-down',
-        speed: 1000,
+        speed: 750,
         intensity: 1,
         threshold: 3,
         delay: 0,
@@ -1057,5 +1296,6 @@
         staggerSelector: ':scope > li',
         replay: false
     });
+    ready.run();
 }
 )();
