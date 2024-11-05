@@ -775,7 +775,7 @@ h1 span[style], h2 span[style], h3 span[style], p span[style], h1 strong, h2 str
     font-size: 2.25em;
     line-height: 1.25;
     font-weight: 700;
-    background-image: linear-gradient(120deg, #89B4FA 0%, #74C7EC 45%);
+    background-image: linear-gradient(120deg, #89B4FA 0%, #74C7EC 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -800,7 +800,7 @@ h1 span[style], h2 span[style], h3 span[style], p span[style], h1 strong, h2 str
 }
 
 #text04 span.p {
-    background-image: linear-gradient(120deg, #89B4FA 0%, #74C7EC 45%);
+    background-image: linear-gradient(120deg, #89B4FA 0%, #74C7EC 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent !important;
 }
@@ -907,7 +907,7 @@ h1 span[style], h2 span[style], h3 span[style], p span[style], h1 strong, h2 str
 #buttons01 .button {
     background-color: #1E2030;
     color: #181825;
-    background-image: linear-gradient(120deg, transparent 25%, rgba(30,32,48,0.008) 100%);
+    background-image: linear-gradient(120deg, transparent 0%, rgba(30,32,48,0.008) 100%);
     background-position: 0% 0%;
     background-repeat: repeat;
     background-size: cover;
@@ -919,12 +919,12 @@ h1 span[style], h2 span[style], h3 span[style], p span[style], h1 strong, h2 str
 
 #buttons01 .n01 {
     background-color: #74C7EC;
-    background-image: linear-gradient(120deg, #89B4FA 25%, rgba(116,199,236,0.008) 100%);
+    background-image: linear-gradient(120deg, #89B4FA 0%, rgba(116,199,236,0.008) 100%);
 }
 
 #buttons01 .n02 {
     background-color: #94E2D5;
-    background-image: linear-gradient(120deg, #A6E3A1 25%, rgba(148,226,213,0.008) 100%);
+    background-image: linear-gradient(120deg, #A6E3A1 0%, rgba(148,226,213,0.008) 100%);
 }
 
 @media (max-width: 1920px) {
