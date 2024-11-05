@@ -452,7 +452,7 @@ h1.style1, h2.style1, h3.style1, p.style1 {
     font-size: 3.125em;
     line-height: 1.125;
     font-weight: 700;
-    background-image: linear-gradient(45deg, #94E2D5 0%, #74C7EC 25%);
+    background-image: linear-gradient(45deg, #94E2D5 0%, #74C7EC 60%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -471,7 +471,7 @@ h1.style1 span.p:nth-child(n + 2), h2.style1 span.p:nth-child(n + 2), h3.style1 
 }
 
 h1.style1 span.p, h2.style1 span.p, h3.style1 span.p, p.style1 span.p {
-    background-image: linear-gradient(45deg, #94E2D5 0%, #74C7EC 25%);
+    background-image: linear-gradient(120deg, #94E2D5 0%, #74C7EC 60%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent !important;
 }
@@ -539,9 +539,9 @@ h1.style1 span.p, h2.style1 span.p, h3.style1 span.p, p.style1 span.p {
 #buttons01 li a {
     display: inline-flex;
     width: auto;
-    height: 1.625rem;
-    line-height: 1.625rem;
-    padding: 0 0.8125rem;
+    height: 1.75rem;
+    line-height: 1.75rem;
+    padding: 0 0.875rem;
     vertical-align: middle;
     font-family: 'Inter', sans-serif;
     font-size: 0.75em;
@@ -571,7 +571,7 @@ h1.style1 span.p, h2.style1 span.p, h3.style1 span.p, p.style1 span.p {
 #buttons01 .button {
     background-color: #FFFFFF;
     color: #181825;
-    background-image: linear-gradient(45deg, rgba(255,255,255,0.188) 0%, rgba(255,255,255,0.008) 60%);
+    background-image: linear-gradient(120deg, #000000 0%, rgba(255,255,255,0.008) 100%);
     background-position: 0% 0%;
     background-repeat: repeat;
     background-size: cover;
@@ -587,22 +587,27 @@ h1.style1 span.p, h2.style1 span.p, h3.style1 span.p, p.style1 span.p {
 
 #buttons01 .n01 {
     background-color: #B4BEFE;
+    background-image: linear-gradient(120deg, #89B4FA 0%, rgba(180,190,254,0.008) 100%);
 }
 
 #buttons01 .n02 {
     background-color: #74C7EC;
+    background-image: linear-gradient(120deg, #89DCEB 0%, rgba(116,199,236,0.008) 100%);
 }
 
 #buttons01 .n03 {
     background-color: #CBA6F7;
+    background-image: linear-gradient(120deg, #F5C2E7 0%, rgba(203,166,247,0.008) 100%);
 }
 
 #buttons01 .n04 {
     background-color: #A6E3A1;
+    background-image: linear-gradient(120deg, #94E2D5 0%, rgba(166,227,161,0.008) 100%);
 }
 
 #buttons01 .n05 {
     background-color: #F38BA8;
+    background-image: linear-gradient(120deg, #EBA0AC 0%, rgba(243,139,168,0.008) 100%);
 }
 
 @media (max-width: 1920px) {
@@ -778,7 +783,7 @@ h1.style1 span.p, h2.style1 span.p, h3.style1 span.p, p.style1 span.p {
 
     #buttons01 li a {
         letter-spacing: 0rem;
-        font-size: 0.875em;
+        font-size: 0.75em;
     }
 
     #buttons01 li a svg {
