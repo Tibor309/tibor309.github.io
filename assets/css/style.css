@@ -397,7 +397,7 @@ h1.style5, h2.style5, h3.style5, p.style5 {
     font-size: 3em;
     line-height: 1.375;
     font-weight: 500;
-    background-image: linear-gradient(45deg, #89B4FA 0%, #74C7EC 45%);
+    background-image: linear-gradient(120deg, #89B4FA 0%, #74C7EC 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -421,7 +421,7 @@ h1.style5 span.p:nth-child(n + 2), h2.style5 span.p:nth-child(n + 2), h3.style5 
 }
 
 h1.style5 span.p, h2.style5 span.p, h3.style5 span.p, p.style5 span.p {
-    background-image: linear-gradient(45deg, #89B4FA 0%, #74C7EC 45%);
+    background-image: linear-gradient(120deg, #89B4FA 0%, #74C7EC 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent !important;
 }
