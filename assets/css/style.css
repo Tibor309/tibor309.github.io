@@ -714,10 +714,6 @@ h1.style1 span.p:nth-child(n + 2), h2.style1 span.p:nth-child(n + 2), h3.style1 
     fill: #74C7EC;
 }
 
-#icons02 .n03 svg {
-    fill: #CBA6F7;
-}
-
 #icons02 .n04 svg {
     fill: #A6E3A1;
 }
