@@ -595,11 +595,6 @@ h1.style1 span.p, h2.style1 span.p, h3.style1 span.p, p.style1 span.p {
     background-image: linear-gradient(120deg, #89DCEB 0%, rgba(116,199,236,0.008) 100%);
 }
 
-#buttons01 .n03 {
-    background-color: #CBA6F7;
-    background-image: linear-gradient(120deg, #F5C2E7 0%, rgba(203,166,247,0.008) 100%);
-}
-
 #buttons01 .n04 {
     background-color: #A6E3A1;
     background-image: linear-gradient(120deg, #94E2D5 0%, rgba(166,227,161,0.008) 100%);
